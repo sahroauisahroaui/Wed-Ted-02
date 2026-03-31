@@ -1,31 +1,18 @@
-$(document).ready(function() {
-    $('#bmiForm').submit(function(e) {
-        e.preventDefault(); // منع تحديث الصفحة
-
-        $.ajax({
-            url: 'calculate.php',
-            type: 'POST',
-            data: $(this).serialize(),
-            dataType: 'json',
-            success: function(response) {
-                if (response.success) {
-                    var alertClass = 'alert-info';
-                    if (response.bmi < 18.5) alertClass = 'alert-warning';
-                    else if (response.bmi < 25) alertClass = 'alert-success';
-                    else if (response.bmi < 30) alertClass = 'alert-info';
-                    else alertClass = 'alert-danger';
-
-                    // عرض الرسالة
-                    $('#result').html('<div class="alert ' + alertClass + '">' + response.message + '</div>');
-                    
-                    // تحديث الجدول فوراً
-                    $('#historyTable').prepend('<tr><td>' + $('#name').val() + '</td><td>' + response.bmi + '</td><td>' + response.status + '</td></tr>');
-                    $('#bmiForm')[0].reset();
-                } else {
-                    $('#result').html('<div class="alert alert-danger">' + response.message + '</div>');
-                }
-            }
-        });
-    });
-});
-
+function addNewRow() {
+    const container = document.getElementById('course-list');
+    const row = document.createElement('div');
+    row.className = 'course-row';
+    row.innerHTML = `
+        <input type="text" name="course[]" placeholder="Course Name" required>
+        <input type="number" name="credits[]" placeholder="Credits" min="1" required>
+        <select name="grade[]">
+            <option value="4.0">A</option>
+            <option value="3.0">B</option>
+            <option value="2.0">C</option>
+            <option value="1.0">D</option>
+            <option value="0.0">F</option>
+        </select>
+        <button type="button" style="background:#dc3545; flex:0.2" onclick="this.parentNode.remove()">X</button>
+    `;
+    container.appendChild(row);
+}
