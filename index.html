@@ -1,33 +1,39 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar">
 <head>
     <meta charset="UTF-8">
-    <title>GPA Calculator</title>
+    <title>حاسبة المعدل GPA</title>
     <link rel="stylesheet" href="style.css">
-    <script src="script.js"></script>
 </head>
 <body>
-    <h1>GPA Calculator</h1>
-    <form action="calculate.php" method="post" onsubmit="return validateForm();">
+    <h1>حاسبة المعدل التراكمي</h1>
+    
+    <form action="calculate.php" method="POST" onsubmit="return validateForm();">
         <div id="courses">
             <div class="course-row">
-                <label>Course: </label>
-                <input type="text" name="course[]" placeholder="e.g. Mathematics" required>
-                <label>Credits: </label>
-                <input type="number" name="credits[]" placeholder="e.g. 3" min="1" required>
-                <label>Grade: </label>
+                <label>المادة:</label>
+                <input type="text" name="course[]" placeholder="اسم المادة" required>
+                
+                <label>الساعات:</label>
+                <input type="number" name="credits[]" min="1" required>
+                
+                <label>الدرجة:</label>
                 <select name="grade[]">
-                    <option value="4.0">A / A+</option>
-                    <option value="3.0">B</option>
-                    <option value="2.0">C</option>
-                    <option value="1.0">D</option>
-                    <option value="0.0">F</option>
+                    <option value="4.0">A / A+ (4.0)</option>
+                    <option value="3.0">B (3.0)</option>
+                    <option value="2.0">C (2.0)</option>
+                    <option value="1.0">D (1.0)</option>
+                    <option value="0.0">F (0.0)</option>
                 </select>
             </div>
         </div>
-        <button type="button" onclick="addCourse()">+ Add Course</button>
+
+        <button type="button" onclick="addCourse()">+ إضافة مادة أخرى</button>
         <br><br>
-        <input type="submit" value="Calculate GPA">
+        <input type="submit" value="احسب المعدل الآن" style="background:#28a745; color:white; padding:10px 20px; border:none; cursor:pointer;">
     </form>
+
+    <script src="script.js"></script>
 </body>
 </html>
+
