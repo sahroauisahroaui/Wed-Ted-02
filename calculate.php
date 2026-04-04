@@ -1,28 +1,59 @@
 <?php
-if (isset($_POST['course'], $_POST['credits'], $_POST['grade'])) {
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['course'])) {
     $courses = $_POST['course'];
     $credits = $_POST['credits'];
-    $grades = $_POST['grade'];
+    $grades  = $_POST['grade'];
+
     $totalPoints = 0;
     $totalCredits = 0;
 
-    echo "<table><tr><th>Course</th><th>Credits</th><th>Grade Points</th></tr>";
-    
+    echo "<html><head><link rel='stylesheet' href='style.css'></head><body>";
+    echo "<h1>ملخص النتائج</h1>";
+    echo "<table>
+            <tr>
+                <th>المادة</th>
+                <th>الساعات المعتمدة</th>
+                <th>نقاط الدرجة</th>
+                <th>المجموع الفرعي</th>
+            </tr>";
+
     for ($i = 0; $i < count($courses); $i++) {
-        $cr = floatval($credits[$i]);
-        $g = floatval($grades[$i]);
-        $pts = $cr * $g;
-        $totalPoints += $pts;
-        $totalCredits += $cr;
+        $name = htmlspecialchars($courses[$i]);
+        $cr   = floatval($credits[$i]);
+        $g    = floatval($grades[$i]);
         
-        echo "<tr><td>{$courses[$i]}</td><td>{$cr}</td><td>{$pts}</td></tr>";
+        $subTotal = $cr * $g;
+        $totalPoints += $subTotal;
+        $totalCredits += $cr;
+
+        echo "<tr>
+                <td>$name</td>
+                <td>$cr</td>
+                <td>$g</td>
+                <td>$subTotal</td>
+              </tr>";
     }
     echo "</table>";
 
     if ($totalCredits > 0) {
         $gpa = $totalPoints / $totalCredits;
-        $interp = ($gpa >= 3.7) ? "Distinction" : (($gpa >= 3.0) ? "Merit" : (($gpa >= 2.0) ? "Pass" : "Fail"));
-        echo "<p>Your GPA is <strong>" . number_format($gpa, 2) . "</strong> ($interp)</p>";
+        
+        // التصنيف حسب الجدول المطلوب
+        if ($gpa >= 3.7) $status = "Distinction (امتياز)";
+        elseif ($gpa >= 3.0) $status = "Merit (جيد جداً)";
+        elseif ($gpa >= 2.0) $status = "Pass (مقبول)";
+        else $status = "Fail (راسب)";
+
+        echo "<div class='result-msg'>";
+        echo "معدلك التراكمي هو: <span style='color:#007BFF'>" . number_format($gpa, 2) . "</span><br>";
+        echo "التقدير: $status";
+        echo "</div>";
     }
+
+    echo "<br><center><a href='index.html'>العودة للحساب مرة أخرى</a></center>";
+    echo "</body></html>";
+} else {
+    header("Location: index.html");
 }
 ?>
+
