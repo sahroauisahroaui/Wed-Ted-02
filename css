@@ -1,7 +1,49 @@
-body { font-family: Arial, sans-serif; margin: 20px; background-color: #f9f9f9; }
-h1 { color: #007BFF; }
-.course-row { display: flex; gap: 10px; align-items: center; margin-bottom: 10px; }
-input, select { padding: 6px; border: 1px solid #ccc; border-radius: 4px; }
-table { border-collapse: collapse; margin-top: 16px; width: 100%; }
-table, th, td { border: 1px solid #ccc; padding: 8px 14px; text-align: center; }
-th { background-color: #007BFF; color: white; }
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f7f6;
+    padding: 20px;
+    direction: rtl; /* ليدعم اللغة العربية */
+}
+
+h1 { color: #007BFF; text-align: center; }
+
+.course-row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 15px;
+    background: #fff;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+input, select {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background: #fff;
+}
+
+table th, table td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: center;
+}
+
+table th { background-color: #007BFF; color: white; }
+
+.result-msg {
+    font-size: 1.2em;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 20px;
+    padding: 15px;
+    border-radius: 5px;
+}
