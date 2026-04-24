@@ -1,39 +1,63 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <title>حاسبة المعدل GPA</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
-    <h1>حاسبة المعدل التراكمي</h1>
-    
-    <form action="calculate.php" method="POST" onsubmit="return validateForm();">
-        <div id="courses">
-            <div class="course-row">
-                <label>المادة:</label>
-                <input type="text" name="course[]" placeholder="اسم المادة" required>
-                
-                <label>الساعات:</label>
-                <input type="number" name="credits[]" min="1" required>
-                
-                <label>الدرجة:</label>
-                <select name="grade[]">
-                    <option value="4.0">A / A+ (4.0)</option>
-                    <option value="3.0">B (3.0)</option>
-                    <option value="2.0">C (2.0)</option>
-                    <option value="1.0">D (1.0)</option>
-                    <option value="0.0">F (0.0)</option>
-                </select>
+    <div class="container">
+        <h1>حاسبة المعدل التراكمي</h1>
+        
+        <form id="gpaForm">
+            <div class="student-info" style="margin-bottom: 20px;">
+                <label>اسم الطالب:</label>
+                <input type="text" name="student_name" placeholder="أدخل اسمك الكامل هنا" required>
             </div>
-        </div>
 
-        <button type="button" onclick="addCourse()">+ إضافة مادة أخرى</button>
-        <br><br>
-        <input type="submit" value="احسب المعدل الآن" style="background:#28a745; color:white; padding:10px 20px; border:none; cursor:pointer;">
-    </form>
+            <div id="courses">
+                <div class="course-row" style="margin-bottom: 15px; display: flex; gap: 15px; align-items: center; border-bottom: 1px solid #eee; padding-bottom: 10px;">
+                    <div>
+                        <label>المادة:</label>
+                        <input type="text" name="course[]" placeholder="مثال: برمجة 1" required>
+                    </div>
+                    
+                    <div>
+                        <label>الساعات:</label>
+                        <input type="number" name="credits[]" min="1" value="1" required style="width: 70px;">
+                    </div>
+                    
+                    <div>
+                        <label>الدرجة:</label>
+                        <select name="grade[]">
+                            <option value="4.0">A / A+ (4.0) - ممتاز مرتفع</option>
+                            <option value="3.5">B+ (3.5) - جيد جداً مرتفع</option>
+                            <option value="3.0">B (3.0) - جيد جداً</option>
+                            <option value="2.5">C+ (2.5) - جيد مرتفع</option>
+                            <option value="2.0">C (2.0) - جيد</option>
+                            <option value="1.5">D+ (1.5) - مقبول مرتفع</option>
+                            <option value="1.0">D (1.0) - مقبول</option>
+                            <option value="0.0">F (0.0) - راسب</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-top: 20px; display: flex; gap: 10px;">
+                <button type="button" id="addCourse" style="background:#007bff; color:white; padding:8px 15px; border:none; cursor:pointer; border-radius: 4px;">
+                    + إضافة مادة أخرى
+                </button>
+            </div>
+
+            <br>
+            <input type="submit" value="احسب المعدل الآن" style="background:#28a745; color:white; padding:12px 20px; border:none; cursor:pointer; width: 100%; font-size: 16px; border-radius: 4px;">
+        </form>
+
+        <div id="result" style="margin-top: 30px;">
+            </div>
+    </div>
 
     <script src="script.js"></script>
 </body>
 </html>
-
