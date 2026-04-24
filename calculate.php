@@ -1,59 +1,74 @@
 <?php
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['course'])) {
+header('Content-Type: application/json');
+
+$host = "localhost";
+$user = "root";
+$pass = "";
+$db   = "gpa_db";
+
+$conn = new mysqli($host, $user, $pass, $db);
+
+if (isset($_POST['course'], $_POST['credits'], $_POST['grade'])) {
     $courses = $_POST['course'];
     $credits = $_POST['credits'];
     $grades  = $_POST['grade'];
-
+    
     $totalPoints = 0;
     $totalCredits = 0;
-
-    echo "<html><head><link rel='stylesheet' href='style.css'></head><body>";
-    echo "<h1>ملخص النتائج</h1>";
-    echo "<table>
-            <tr>
-                <th>المادة</th>
-                <th>الساعات المعتمدة</th>
-                <th>نقاط الدرجة</th>
-                <th>المجموع الفرعي</th>
-            </tr>";
+    $tableRows = "";
 
     for ($i = 0; $i < count($courses); $i++) {
         $name = htmlspecialchars($courses[$i]);
-        $cr   = floatval($credits[$i]);
-        $g    = floatval($grades[$i]);
-        
-        $subTotal = $cr * $g;
-        $totalPoints += $subTotal;
-        $totalCredits += $cr;
+        $cr = floatval($credits[$i]);
+        $gr = floatval($grades[$i]);
+        $pts = $cr * $gr;
 
-        echo "<tr>
-                <td>$name</td>
-                <td>$cr</td>
-                <td>$g</td>
-                <td>$subTotal</td>
-              </tr>";
+        if ($cr <= 0) continue;
+
+        $totalPoints += $pts;
+        $totalCredits += $cr;
+        $tableRows .= "<tr><td>$name</td><td>$cr</td><td>$gr</td><td>$pts</td></tr>";
     }
-    echo "</table>";
 
     if ($totalCredits > 0) {
         $gpa = $totalPoints / $totalCredits;
         
-        // التصنيف حسب الجدول المطلوب
-        if ($gpa >= 3.7) $status = "Distinction (امتياز)";
-        elseif ($gpa >= 3.0) $status = "Merit (جيد جداً)";
-        elseif ($gpa >= 2.0) $status = "Pass (مقبول)";
-        else $status = "Fail (راسب)";
+        if ($gpa >= 3.7) $status = "Distinction";
+        elseif ($gpa >= 3.0) $status = "Merit";
+        elseif ($gpa >= 2.0) $status = "Pass";
+        else $status = "Fail";
 
-        echo "<div class='result-msg'>";
-        echo "معدلك التراكمي هو: <span style='color:#007BFF'>" . number_format($gpa, 2) . "</span><br>";
-        echo "التقدير: $status";
-        echo "</div>";
+        $stmt = $conn->prepare("INSERT INTO gpa_records (student_name, gpa) VALUES (?, ?)");
+        $student = "Student_Trial";
+        $stmt->bind_param("sd", $student, $gpa);
+        $stmt->execute();
+
+        $percent = ($gpa / 4) * 100;
+        $color = ($gpa >= 3.0) ? "bg-success" : (($gpa >= 2.0) ? "bg-warning" : "bg-danger");
+        
+        $progressBar = '
+        <div class="progress mb-3">
+            <div class="progress-bar '.$color.'" role="progressbar" style="width: '.$percent.'%">
+                '.number_format($gpa, 2).'
+            </div>
+        </div>';
+
+        $tableHtml = '
+        <table class="table table-bordered">
+            <thead class="thead-dark"><tr><th>Course</th><th>Credits</th><th>Grade</th><th>Points</th></tr></thead>
+            <tbody>'.$tableRows.'</tbody>
+        </table>';
+
+        echo json_encode([
+            'success' => true,
+            'gpa' => $gpa,
+            'message' => "GPA: " . number_format($gpa, 2) . " ($status)",
+            'progressBar' => $progressBar,
+            'tableHtml' => $tableHtml
+        ]);
+    } else {
+        echo json_encode(['success' => false, 'message' => 'No valid data.']);
     }
-
-    echo "<br><center><a href='index.html'>العودة للحساب مرة أخرى</a></center>";
-    echo "</body></html>";
-} else {
-    header("Location: index.html");
 }
+$conn->close();
 ?>
-
