@@ -3,15 +3,13 @@ $(document).ready(function () {
         e.preventDefault();
         var row = $('.course-row').first().clone();
         row.find('input').val('');
-        row.find('.remove-row').parent().remove();
-        row.append('<div class="col-auto"><button type="button" class="btn btn-danger remove-row">×</button></div>');
+        row.find('.remove-btn').remove();
+        row.append('<button type="button" class="remove-btn" style="background:#dc3545; color:white; border:none; padding:5px 10px; cursor:pointer; border-radius:4px;">حذف</button>');
         $('#courses').append(row);
     });
 
-    $(document).on('click', '.remove-row', function () {
-        if ($('.course-row').length > 1) {
-            $(this).closest('.course-row').remove();
-        }
+    $(document).on('click', '.remove-btn', function () {
+        $(this).closest('.course-row').remove();
     });
 
     $('#gpaForm').on('submit', function (e) {
@@ -23,27 +21,23 @@ $(document).ready(function () {
             data: $(this).serialize(),
             dataType: 'json',
             beforeSend: function() {
-                $('#result').html('<div class="alert alert-info">Calculating...</div>');
+                $('#result').html('<div style="text-align:center; color:#007bff;">جاري الحساب...</div>');
             },
             success: function (response) {
                 if (response.success) {
-                    let alertClass = 'alert-info';
-                    if (response.gpa >= 3.7) alertClass = 'alert-success';
-                    else if (response.gpa >= 3.0) alertClass = 'alert-info';
-                    else if (response.gpa >= 2.0) alertClass = 'alert-warning';
-                    else alertClass = 'alert-danger';
-
                     $('#result').html(
-                        '<div class="alert ' + alertClass + '">' + response.message + '</div>' + 
+                        '<div style="padding:15px; border-radius:4px; background:#e9ecef;">' + 
+                        '<h3>' + response.message + '</h3>' + 
                         (response.progressBar || '') + 
-                        (response.tableHtml || '')
+                        (response.tableHtml || '') + 
+                        '</div>'
                     );
                 } else {
-                    $('#result').html('<div class="alert alert-danger">' + response.message + '</div>');
+                    $('#result').html('<div style="color:red; padding:10px; border:1px solid red;">' + response.message + '</div>');
                 }
             },
             error: function () {
-                $('#result').html('<div class="alert alert-danger">Error: Could not connect to calculate.php</div>');
+                $('#result').html('<div style="color:red; padding:10px; border:1px solid red;">خطأ: لم يتم العثور على ملف calculate.php أو يوجد خطأ في السيرفر.</div>');
             }
         });
     });
